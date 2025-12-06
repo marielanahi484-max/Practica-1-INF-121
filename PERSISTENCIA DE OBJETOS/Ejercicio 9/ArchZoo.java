@@ -1,102 +1,98 @@
 public class ArchZoo {
-
-    private String nombre;  
-    private Zoologico zoos[] = new Zoologico[50];
+    private Zoologico lista[] = new Zoologico[10];
     private int n = 0;
 
-    public ArchZoo(String nombre) {
-        this.nombre = nombre;
+ 
+    public void crear(Zoologico z){
+        if(n < 10){
+            lista[n] = z;
+            n++;
+        }
     }
 
-    public void crear(Zoologico z) {
-        zoos[n] = z;
-        n++;
-    }
-
-    public void modificar(int id) {
-        for (int i = 0; i < n; i++) {
-            if (zoos[i].getId() == id) {
-                zoos[i] = new Zoologico(id, "Modificado");
+    public void modificar(int id, String nuevoNombre){
+        for(int i=0;i<n;i++){
+            if(lista[i].getId() == id){
+                lista[i] = new Zoologico(id, nuevoNombre);
             }
         }
     }
 
-    public void eliminar(int id) {
-        for (int i = 0; i < n; i++) {
-            if (zoos[i].getId() == id) {
-                zoos[i] = zoos[n - 1];
+
+    public void eliminar(int id){
+        for(int i=0;i<n;i++){
+            if(lista[i].getId() == id){
+                for(int j=i; j<n-1; j++){
+                    lista[j] = lista[j+1];
+                }
                 n--;
+                break;
             }
         }
     }
 
-    public void listarMaxVariedad() {
+    public void listarMayorVariedad(){
         int max = 0;
-
-        for (int i = 0; i < n; i++) {
-            if (zoos[i].getNroAnimales() > max)
-                max = zoos[i].getNroAnimales();
+        for(int i=0;i<n;i++){
+            if(lista[i].getVariedad() > max)
+                max = lista[i].getVariedad();
         }
 
-        for (int i = 0; i < n; i++) {
-            if (zoos[i].getNroAnimales() == max) {
-                System.out.println("Zoo: " + zoos[i].getNombre());
+        System.out.println("\nZoológicos con mayor variedad (" + max + "):");
+        for(int i=0;i<n;i++){
+            if(lista[i].getVariedad() == max){
+                System.out.println(lista[i]);
             }
         }
     }
 
-
-    public void eliminarVacios() {
-        for (int i = 0; i < n; i++) {
-            if (zoos[i].getNroAnimales() == 0) {
-                zoos[i] = zoos[n - 1];
-                n--;
+    public void eliminarVacios(){
+        for(int i=0;i<n;i++){
+            if(lista[i].estaVacio()){
+                System.out.println("Eliminando zoológico vacío: " + lista[i].getNombre());
+                eliminar(lista[i].getId());
                 i--;
             }
         }
     }
 
-    public void mostrarEspecie(String esp) {
-        for (int i = 0; i < n; i++) {
-            for (Animal a : zoos[i].getAnimales()) {
-                if (a != null && a.getEspecie().equalsIgnoreCase(esp)) {
-                    System.out.println(a.getNombre() + " (" + zoos[i].getNombre() + ")");
+    public void mostrarEspecie(String especie){
+        System.out.println("\nAnimales de la especie " + especie + ":");
+        for(int i=0;i<n;i++){
+            Animal[] a = lista[i].getAnimales();
+            for(int j=0;j<lista[i].getNroAnimales(); j++){
+                if(a[j].getEspecie().equalsIgnoreCase(especie)){
+                    System.out.println(a[j] + " - En zoológico: " + lista[i].getNombre());
                 }
             }
         }
     }
 
-    public void moverAnimales(int X, int Y) {
-        Zoologico a = null, b = null;
+    public void moverAnimales(int idX, int idY){
+        Zoologico zx = null, zy = null;
 
-        for (int i = 0; i < n; i++) {
-            if (zoos[i].getId() == X) a = zoos[i];
-            if (zoos[i].getId() == Y) b = zoos[i];
+        for(int i=0;i<n;i++){
+            if(lista[i].getId() == idX) zx = lista[i];
+            if(lista[i].getId() == idY) zy = lista[i];
         }
 
-        if (a != null && b != null) {
-            for (Animal x : a.getAnimales()) {
-                if (x != null) b.agregar(x);
-            }
-            a = new Zoologico(X, "Vacio");
+        if(zx == null || zy == null){
+            System.out.println("Error: zoológicos no encontrados");
+            return;
         }
+
+        Animal[] ax = zx.getAnimales();
+        for(int i=0;i<zx.getNroAnimales();i++){
+            zy.agregarAnimal(ax[i]);
+        }
+
+        zx = new Zoologico(idX, zx.getNombre());
+        System.out.println("Animales movidos de " + idX + " a " + idY);
     }
 
-    void mostrarPorEspecie(String esp) {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    void listarEliminarVacios() {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    void listarMayorVariedad() {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    void listar() {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public void mostrarTodo(){
+        for(int i=0;i<n;i++){
+            System.out.println(lista[i]);
+        }
     }
 }
