@@ -1,9 +1,9 @@
-public class Nino extends Persona {
+public class Niño extends Persona {
     private int edad;
     private float peso;
     private float talla;
 
-    public Nino(String nombre, String apPat, String apMat, int ci,
+    public Niño(String nombre, String apPat, String apMat, int ci,
                 int edad, float peso, float talla) {
         super(nombre, apPat, apMat, ci);
         this.edad = edad;
